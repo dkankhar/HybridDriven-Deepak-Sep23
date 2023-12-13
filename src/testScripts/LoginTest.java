@@ -5,14 +5,8 @@
 
 package testScripts;
 
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -21,22 +15,94 @@ import org.testng.annotations.Test;
 
 import base.ControlActions;
 import pages.LoginPage;
+import utility.ExcelOperations;
 
 public class LoginTest {
-	
-	
+	LoginPage login;
+
 	@BeforeMethod
 	public void setUp() {
 		ControlActions.launchBrowser();
+		login = new LoginPage();
 	}
-	
-	@Test
-	public void verifyLogin() {
-		LoginPage login = new LoginPage();		
-		login.login("dgkankhar@gmail.com", "Deepak@21");
+
+	@Test(dataProvider = "loginDetails")
+	public void verifyLogin(String uEmail, String uPassword) {
+		System.out.println("STEP: Login with login credentials.");
+		login.login(uEmail, uPassword);
 		Assert.assertTrue(login.isLoginSuccessMsgDisplayed());
-		
-	}	
+	}
+
+	@Test
+	public void verifyValidationMsgs() {
+		System.out.println("STEP: Click on Login button.");
+		login.clickLoginButton();
+		System.out.println("VERIFY: Email Error message is displayed!");
+		Assert.assertTrue(login.isEmailErrorMsgDisplayed());
+		System.out.println("VERIFY: Password Error message is displayed!");
+		Assert.assertTrue(login.isPasswordErrorMsgDisplayed());
+	}
+
+	@Test
+	public void verifyPasswordValidation() {
+		System.out.println("STEP: Enter valid UserName.");
+		login.enterUserEmail("dgkankhar@gmail.com");
+		System.out.println("STEP: Click on Login button.");
+		login.clickLoginButton();
+		System.out.println("VERIFY: Email Error message is not displayed!");
+		Assert.assertFalse(login.isEmailErrorMsgDisplayed());
+		System.out.println("VERIFY: Password Error message is displayed!");
+		Assert.assertTrue(login.isPasswordErrorMsgDisplayed());
+	}
+
+	@Test
+	public void verifyEmailValidation() {
+		System.out.println("STEP: Enter valid Password.");
+		login.enterPassword("Deepak@21");
+		System.out.println("STEP: Click on Login button.");
+		login.clickLoginButton();
+		System.out.println("VERIFY: Email Error message is displayed!");
+		Assert.assertTrue(login.isEmailErrorMsgDisplayed());
+		System.out.println("VERIFY: Password Error message is not displayed!");
+		Assert.assertFalse(login.isPasswordErrorMsgDisplayed());
+	}
+
+	@Test(dataProvider = "LoginDataProviderFromExcel")
+	public void verifyLoginDataDriven(String uEmail, String uPassword, String loginStatus) {
+		System.out.println("STEP: Login with login credentials.");
+		boolean flag;
+		if (loginStatus.equalsIgnoreCase("Pass")) {
+			login.login(uEmail, uPassword);
+			flag = login.isLoginSuccessMsgDisplayed();
+			Assert.assertTrue(flag, "Login Successfully msg not displayed");
+
+//			flag = login.isLoginFailMsgDisplayed();
+//			Assert.assertFalse(flag, "Incorrect password msg not displayed");
+
+		} else {
+			login.login(uEmail, uPassword);
+			flag = login.isLoginFailMsgDisplayed();
+			Assert.assertTrue(flag, "Incorrect password msg not displayed");
+
+//			flag = login.isLoginSuccessMsgDisplayed();
+//			Assert.assertFalse(flag, "Login Successfully msg not displayed");
+		}
+	}
+
+	@DataProvider(name = "LoginDataProviderFromExcel")
+	public Object[][] loginDetailsFromExcel() throws IOException {
+		Object[][] data = ExcelOperations.readLoginData(".//testdata//LoginData.xlsx", "Login");
+		return data;
+	}
+
+	@DataProvider
+	public Object[][] loginDetails() throws IOException {
+		Object[][] data = new Object[1][2];
+		data[0][0] = "dgkankhar@gmail.com";
+		data[0][1] = "Deepak@21";
+
+		return data;
+	}
 
 	@AfterMethod
 	public void tearDown() {
