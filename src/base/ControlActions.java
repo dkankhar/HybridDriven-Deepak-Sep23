@@ -1,15 +1,13 @@
 package base;
 
-import java.util.Properties;
-
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import bsh.org.objectweb.asm.Constants;
 import constants.ConstantPath;
 import utility.PropOperations;
 
@@ -79,18 +77,35 @@ public abstract class ControlActions {
 		}
 		return element;
 	}
-	
+
 	protected void waitTillElementIsVisible(WebElement element) {
 		wait.until(ExpectedConditions.visibilityOf(element));
 	}
-	
+
 	protected void waitTillElementIsClickable(WebElement element) {
 		wait.until(ExpectedConditions.elementToBeClickable(element));
 	}
-	
+
 	protected void waitTillElementIsInvisible(WebElement element) {
 		WebDriverWait wait = new WebDriverWait(driver, ConstantPath.FAST_WAIT);
 		wait.until(ExpectedConditions.invisibilityOf(element));
+	}
+
+	protected boolean isElementVisible(WebElement e) {
+		try {
+			return e.isDisplayed();
+		} catch (NoSuchElementException ne) {
+			return false;
+		}
+	}
+
+	protected boolean isElementVisible(WebElement e, boolean isWaitRequired) {
+		try {
+			wait.until(ExpectedConditions.visibilityOf(e));
+			return true;
+		} catch (NoSuchElementException ne) {
+			return false;
+		}
 	}
 
 }
