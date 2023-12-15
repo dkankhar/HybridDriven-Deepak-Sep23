@@ -8,6 +8,7 @@ package testScripts;
 import java.io.IOException;
 
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -17,15 +18,8 @@ import base.ControlActions;
 import pages.LoginPage;
 import utility.ExcelOperations;
 
-public class LoginTest {
-	LoginPage login;
-
-	@BeforeMethod
-	public void setUp() {
-		ControlActions.launchBrowser();
-		login = new LoginPage();
-	}
-
+public class LoginTest extends TestBase{
+	
 	@Test(dataProvider = "loginDetails")
 	public void verifyLogin(String uEmail, String uPassword) {
 		System.out.println("STEP: Login with login credentials.");
@@ -102,10 +96,5 @@ public class LoginTest {
 		data[0][1] = "Deepak@21";
 
 		return data;
-	}
-
-	@AfterMethod
-	public void tearDown() {
-		ControlActions.closeBrowser();
 	}
 }
