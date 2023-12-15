@@ -1,7 +1,13 @@
 package base;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -105,6 +111,17 @@ public abstract class ControlActions {
 			return true;
 		} catch (NoSuchElementException ne) {
 			return false;
+		}
+	}
+	
+	public static void captureScreenshot(String fileName) {
+		TakesScreenshot ts = (TakesScreenshot) driver;
+		File srcFile = ts.getScreenshotAs(OutputType.FILE);
+		try {
+			FileUtils.copyFile(srcFile, new File(".//screenshots//"+fileName+".jpeg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
