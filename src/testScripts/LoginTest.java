@@ -8,24 +8,19 @@ package testScripts;
 import java.io.IOException;
 
 import org.testng.Assert;
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import base.ControlActions;
-import pages.LoginPage;
 import utility.ExcelOperations;
 
 public class LoginTest extends TestBase{
 	
-	@Test(dataProvider = "loginDetails")
-	public void verifyLogin(String uEmail, String uPassword) {
-		System.out.println("STEP: Login with login credentials.");
-		login.login(uEmail, uPassword);
-		Assert.assertTrue(login.isLoginSuccessMsgDisplayed());
-	}
+//	//@Test(dataProvider = "loginDetails")
+//	public void verifyLogin(String uEmail, String uPassword) {
+//		System.out.println("STEP: Login with login credentials.");
+//		login.login(uEmail, uPassword);
+//		Assert.assertTrue(login.isLoginSuccessMsgDisplayed());
+//	}
 
 	@Test
 	public void verifyValidationMsgs() {
@@ -89,12 +84,12 @@ public class LoginTest extends TestBase{
 		return data;
 	}
 
-	@DataProvider
-	public Object[][] loginDetails() throws IOException {
-		Object[][] data = new Object[1][2];
-		data[0][0] = "dgkankhar@gmail.com";
-		data[0][1] = "Deepak@21";
-
-		return data;
-	}
+//	@DataProvider
+//	public Object[][] loginDetails() throws IOException {
+//		Object[][] data = new Object[1][2];
+//		data[0][0] = "dgkankhar@gmail.com";
+//		data[0][1] = "Deepak@21";
+//
+//		return data;
+//	}
 }

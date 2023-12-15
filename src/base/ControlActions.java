@@ -2,6 +2,8 @@ package base;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -123,6 +125,16 @@ public abstract class ControlActions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	protected List<String> listOfWebElements(List<WebElement> webElements) {
+		List<WebElement> listofElements = webElements;
+		List<String> listOfElementsText = new ArrayList<String>();
+		
+		for(WebElement element : listofElements ) {
+			listOfElementsText.add(element.getText());
+		}
+		return listOfElementsText;
 	}
 
 }

@@ -1,19 +1,29 @@
 package testScripts;
 
+import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 import base.ControlActions;
+import pages.DashboardPage;
 import pages.LoginPage;
 
 public class TestBase {
 	LoginPage login;
+	DashboardPage dashboard;
 
 	@BeforeMethod
 	public void setUp() {
 		ControlActions.launchBrowser();
 		login = new LoginPage();
+		dashboard = new DashboardPage();
+	}
+	
+	public void verifyLogin(String uEmail, String uPassword) {
+		System.out.println("STEP: Login with login credentials.");
+		login.login(uEmail, uPassword);
+		Assert.assertTrue(login.isLoginSuccessMsgDisplayed());
 	}
 
 	@AfterMethod
